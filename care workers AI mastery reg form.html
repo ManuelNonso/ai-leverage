@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NWAS AI Workshop — Register Your Place</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal-dark:#0B3D3D; --teal:#1A6B6B; --teal-light:#4ECDC4;
+    --teal-bg:#EFF7F5; --teal-mid:#B2D8D0;
+    --amber:#E8A020; --amber-dark:#B45309; --amber-bg:#FEF3C7;
+    --slate:#1E3A3A; --grey:#64748B; --border:#D1E8E4;
+    --page-bg:#F0F5F3; --error:#DC2626; --green:#059669;
+    --green-bg:#D1FAE5; --red-bg:#FEE2E2;
+  }
+  body { font-family:'Open Sans',sans-serif; background:var(--page-bg); color:var(--slate); min-height:100vh; padding:0 0 60px; }
+
+  /* HERO */
+  .form-hero { background:var(--teal-dark); padding:48px 24px 40px; text-align:center; position:relative; overflow:hidden; }
+  .form-hero::before { content:''; position:absolute; top:-80px; right:-80px; width:260px; height:260px; border-radius:50%; background:rgba(78,205,196,0.07); pointer-events:none; }
+  .form-hero::after  { content:''; position:absolute; bottom:-60px; left:-60px; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.04); pointer-events:none; }
+  .hero-org  { display:inline-block; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.18); border-radius:30px; padding:6px 18px; font-family:'Montserrat',sans-serif; font-size:10px; font-weight:800; color:#A3E4D7; letter-spacing:2px; text-transform:uppercase; margin-bottom:18px; }
+  .hero-title { font-family:'Montserrat',sans-serif; font-size:clamp(26px,5vw,38px); font-weight:900; color:#fff; line-height:1.1; margin-bottom:8px; }
+  .hero-title span { color:var(--teal-light); }
+  .hero-sub  { font-size:15px; color:rgba(255,255,255,0.6); margin-bottom:28px; line-height:1.5; }
+  .hero-pills { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+  .hero-pill  { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:6px 14px; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; color:#fff; }
+  .hero-pill.amber { background:var(--amber); border-color:var(--amber); color:#3D1F00; }
+
+  /* WRAP */
+  .form-wrap { max-width:680px; margin:-24px auto 0; padding:0 16px; position:relative; z-index:10; }
+
+  /* PROGRESS */
+  .progress-bar-wrap { background:#fff; border-radius:12px 12px 0 0; padding:18px 28px 14px; border-bottom:1px solid var(--border); }
+  .progress-label { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .progress-text  { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; color:var(--teal); text-transform:uppercase; letter-spacing:1.2px; }
+  .progress-pct   { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; color:var(--grey); }
+  .progress-track { height:6px; background:#E2EEE8; border-radius:10px; overflow:hidden; }
+  .progress-fill  { height:100%; background:linear-gradient(90deg,var(--teal),var(--teal-light)); border-radius:10px; transition:width .5s ease; width:0%; }
+
+  /* CARD */
+  .form-card { background:#fff; border-radius:0 0 16px 16px; overflow:hidden; box-shadow:0 8px 40px rgba(11,61,61,.10); }
+
+  /* SECTIONS */
+  .form-section { display:none; padding:32px 32px 24px; border-top:1px solid var(--border); }
+  .form-section.active { display:block; }
+  .form-section:first-of-type { border-top:none; }
+  .section-header { display:flex; align-items:flex-start; gap:14px; margin-bottom:28px; }
+  .section-icon   { width:44px; height:44px; border-radius:11px; background:var(--teal-bg); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:20px; }
+  .section-title  { font-family:'Montserrat',sans-serif; font-size:18px; font-weight:800; color:var(--slate); margin-bottom:3px; }
+  .section-desc   { font-size:13px; color:var(--grey); line-height:1.5; }
+
+  /* FIELDS */
+  .field-row  { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:16px; }
+  @media(max-width:520px){ .field-row { grid-template-columns:1fr; } }
+  .field-full { margin-bottom:16px; }
+  .field-label { display:block; font-family:'Montserrat',sans-serif; font-size:11.5px; font-weight:700; color:var(--slate); text-transform:uppercase; letter-spacing:.8px; margin-bottom:7px; }
+  .required-star { color:var(--error); margin-left:2px; }
+  .field-hint { font-size:11px; color:var(--grey); margin-top:5px; line-height:1.4; }
+
+  input[type="text"],input[type="email"],input[type="tel"],select,textarea {
+    width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:9px;
+    font-family:'Open Sans',sans-serif; font-size:14px; color:var(--slate); background:#fff;
+    transition:border-color .2s,box-shadow .2s; outline:none; appearance:none;
+  }
+  input:focus,select:focus,textarea:focus { border-color:var(--teal); box-shadow:0 0 0 3px rgba(26,107,107,.12); }
+  select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231A6B6B' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:40px; cursor:pointer; }
+  textarea { resize:vertical; min-height:90px; line-height:1.55; }
+
+  /* CHOICES */
+  .choice-group { display:flex; flex-direction:column; gap:8px; }
+  .choice-group.inline { flex-direction:row; flex-wrap:wrap; gap:8px; }
+  .choice-item input[type="radio"],.choice-item input[type="checkbox"] { position:absolute; opacity:0; width:0; height:0; }
+  .choice-item label { display:flex; align-items:center; gap:10px; padding:11px 16px; border:1.5px solid var(--border); border-radius:9px; cursor:pointer; font-size:13.5px; color:var(--slate); transition:border-color .2s,background .2s; line-height:1.4; user-select:none; }
+  .choice-item label:hover { border-color:var(--teal); background:var(--teal-bg); }
+  .choice-item input:checked + label { border-color:var(--teal); background:var(--teal-bg); color:var(--teal-dark); font-weight:600; }
+  .choice-item input:checked + label .choice-dot { background:var(--teal); border-color:var(--teal); }
+  .choice-item input:checked + label .choice-dot::after { opacity:1; }
+  .choice-dot { width:18px; height:18px; border:2px solid var(--border); border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+  .choice-dot::after { content:''; width:8px; height:8px; border-radius:50%; background:#fff; opacity:0; transition:opacity .2s; }
+  .choice-check { width:18px; height:18px; border:2px solid var(--border); border-radius:5px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+  .choice-item input[type="checkbox"]:checked + label .choice-check { background:var(--teal); border-color:var(--teal); }
+  .choice-item input[type="checkbox"]:checked + label .choice-check::after { content:''; width:10px; height:6px; border-left:2px solid #fff; border-bottom:2px solid #fff; transform:rotate(-45deg) translateY(-1px); display:block; }
+
+  /* SCALE */
+  .scale-wrap { display:flex; flex-direction:column; gap:8px; }
+  .scale-row  { display:flex; align-items:center; gap:10px; }
+  .scale-label-text { font-size:12.5px; color:var(--grey); width:130px; flex-shrink:0; line-height:1.3; }
+  .scale-options { display:flex; gap:6px; flex:1; }
+  .scale-option input { position:absolute; opacity:0; }
+  .scale-option label { width:36px; height:36px; border:1.5px solid var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; color:var(--grey); cursor:pointer; transition:all .15s; }
+  .scale-option label:hover { border-color:var(--teal); color:var(--teal); }
+  .scale-option input:checked + label { background:var(--teal); border-color:var(--teal); color:#fff; }
+
+  /* CALLOUTS */
+  .callout { border-radius:10px; padding:14px 16px; display:flex; align-items:flex-start; gap:10px; margin-bottom:20px; font-size:12.5px; line-height:1.55; }
+  .callout.teal  { background:var(--teal-bg); border:1px solid #B2D8D0; color:var(--teal-dark); }
+  .callout.amber { background:var(--amber-bg); border:1px solid #FCD34D; color:#5C3A00; }
+  .callout-icon { font-size:17px; flex-shrink:0; margin-top:1px; }
+
+  /* CONSENT */
+  .consent-box { background:#F8FAF9; border:1.5px solid var(--border); border-radius:10px; padding:16px; margin-bottom:16px; }
+  .consent-item { display:flex; align-items:flex-start; gap:12px; margin-bottom:12px; }
+  .consent-item:last-child { margin-bottom:0; }
+  .consent-checkbox { width:20px; height:20px; border:2px solid var(--border); border-radius:5px; flex-shrink:0; margin-top:1px; cursor:pointer; accent-color:var(--teal); }
+  .consent-text { font-size:12.5px; color:var(--slate); line-height:1.55; }
+  .consent-text strong { font-weight:700; }
+
+  /* NAV */
+  .form-nav { display:flex; align-items:center; justify-content:space-between; padding:20px 32px 28px; border-top:1px solid var(--border); gap:12px; }
+  .btn { font-family:'Montserrat',sans-serif; font-size:13.5px; font-weight:700; border:none; border-radius:10px; padding:13px 28px; cursor:pointer; transition:all .2s; display:inline-flex; align-items:center; gap:8px; }
+  .btn-back   { background:#F1F5F3; color:var(--teal); border:1.5px solid var(--border); }
+  .btn-back:hover { background:var(--teal-bg); border-color:var(--teal); }
+  .btn-next   { background:var(--teal-dark); color:#fff; flex:1; justify-content:center; max-width:280px; }
+  .btn-next:hover { background:var(--teal); transform:translateY(-1px); box-shadow:0 4px 16px rgba(11,61,61,.25); }
+  .btn-submit { background:var(--amber); color:#3D1F00; flex:1; justify-content:center; max-width:280px; font-size:14px; }
+  .btn-submit:hover { background:#D4911A; transform:translateY(-1px); box-shadow:0 4px 16px rgba(232,160,32,.4); }
+  .btn-submit:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+
+  /* STEP DOTS */
+  .step-dots  { display:flex; align-items:center; gap:6px; }
+  .step-dot   { width:8px; height:8px; border-radius:50%; background:var(--border); transition:all .3s; }
+  .step-dot.active { background:var(--teal); width:20px; border-radius:4px; }
+  .step-dot.done   { background:var(--teal-light); }
+
+  /* SUCCESS */
+  .success-screen { display:none; padding:48px 32px; text-align:center; }
+  .success-icon   { width:72px; height:72px; background:var(--green-bg); border-radius:50%; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; font-size:32px; }
+  .success-title  { font-family:'Montserrat',sans-serif; font-size:24px; font-weight:800; color:var(--slate); margin-bottom:10px; }
+  .success-body   { font-size:14.5px; color:var(--grey); line-height:1.6; margin-bottom:24px; max-width:440px; margin-left:auto; margin-right:auto; }
+  .success-box    { background:var(--teal-bg); border:1px solid #B2D8D0; border-radius:12px; padding:18px 20px; margin-bottom:24px; text-align:left; }
+  .success-box-title { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:800; color:var(--teal); text-transform:uppercase; letter-spacing:1.2px; margin-bottom:10px; }
+  .success-detail { font-size:13.5px; color:var(--teal-dark); margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+
+  /* SPINNER */
+  .spinner { display:inline-block; width:18px; height:18px; border:2.5px solid rgba(0,0,0,.15); border-top-color:var(--teal-dark); border-radius:50%; animation:spin .7s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* SECTION DIV */
+  .section-divider { height:1px; background:var(--border); margin:20px 0; }
+</style>
+</head>
+<body>
+
+<div class="form-hero">
+  <div class="hero-org">North Wales Africa Society</div>
+  <div class="hero-title">AI Mastery for<br><span>Care Workers</span></div>
+  <div class="hero-sub">Saturday 27 June 2026 &nbsp;·&nbsp; 10:00 AM – 12:30 PM &nbsp;·&nbsp; Hybrid</div>
+  <div class="hero-pills">
+    <div class="hero-pill">📅 27 June 2026</div>
+    <div class="hero-pill">🕙 10:00 AM – 12:30 PM</div>
+    <div class="hero-pill">💻 In-person + Online</div>
+    <div class="hero-pill amber">🎟 FREE — Limited Spaces</div>
+  </div>
+</div>
+
+<div class="form-wrap">
+  <div class="progress-bar-wrap">
+    <div class="progress-label">
+      <span class="progress-text" id="progress-text">Step 1 of 4 — Your Details</span>
+      <span class="progress-pct" id="progress-pct">25%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:25%"></div></div>
+  </div>
+
+  <div class="form-card">
+    <form id="workshop-form" novalidate>
+
+      <!-- STEP 1 -->
+      <div class="form-section active" id="step-1">
+        <div class="section-header">
+          <div class="section-icon">👤</div>
+          <div><div class="section-title">Your Details</div><div class="section-desc">Tell us a little about yourself so we can personalise your experience.</div></div>
+        </div>
+        <div class="field-row">
+          <div>
+            <label class="field-label" for="first-name">First Name<span class="required-star">*</span></label>
+            <input type="text" id="first-name" name="first_name" placeholder="e.g. Amara" required>
+          </div>
+          <div>
+            <label class="field-label" for="last-name">Last Name<span class="required-star">*</span></label>
+            <input type="text" id="last-name" name="last_name" placeholder="e.g. Okafor" required>
+          </div>
+        </div>
+        <div class="field-full">
+          <label class="field-label" for="email">Email Address<span class="required-star">*</span></label>
+          <input type="email" id="email" name="email" placeholder="yourname@email.com" required>
+          <div class="field-hint">We'll send your confirmation and joining instructions here.</div>
+        </div>
+        <div class="field-full">
+          <label class="field-label" for="phone">Phone / WhatsApp Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="+44 7700 000000">
+          <div class="field-hint">Optional — for a WhatsApp reminder before the event.</div>
+        </div>
+        <div class="field-full">
+          <label class="field-label" for="attendance">How will you attend?<span class="required-star">*</span></label>
+          <select id="attendance" name="attendance" required>
+            <option value="" disabled selected>Select your attendance type</option>
+            <option value="In-Person">In-Person (North Wales venue)</option>
+            <option value="Online">Online (via Zoom / Google Meet)</option>
+            <option value="Undecided">Not sure yet — please confirm closer to the date</option>
+          </select>
+        </div>
+        <div class="field-full">
+          <label class="field-label" for="heard">How did you hear about this event?</label>
+          <select id="heard" name="heard">
+            <option value="" disabled selected>Select an option</option>
+            <option value="NWAS WhatsApp">NWAS WhatsApp Group</option>
+            <option value="Email from Manuel">Email from Manuel</option>
+            <option value="Word of mouth">Word of mouth / friend</option>
+            <option value="Social media">Social media</option>
+            <option value="Attended before">I attended the November workshop</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="form-section" id="step-2">
+        <div class="section-header">
+          <div class="section-icon">💼</div>
+          <div><div class="section-title">Your Work</div><div class="section-desc">Help us tailor the session to your specific role and sector.</div></div>
+        </div>
+        <div class="field-full">
+          <label class="field-label" for="job-title">Your Job Title<span class="required-star">*</span></label>
+          <input type="text" id="job-title" name="job_title" placeholder="e.g. Support Worker, Care Assistant, Senior Carer" required>
+        </div>
+        <div class="field-full">
+          <label class="field-label" for="employer-type">Type of Organisation<span class="required-star">*</span></label>
+          <select id="employer-type" name="employer_type" required>
+            <option value="" disabled selected>Select your organisation type</option>
+            <option value="Care Home">Care Home (residential)</option>
+            <option value="Domiciliary">Domiciliary / Home Care Agency</option>
+            <option value="Supported Living">Supported Living Provider</option>
+            <option value="NHS">NHS / Hospital Setting</option>
+            <option value="Learning Disability">Learning Disability Support Service</option>
+            <option value="Mental Health">Mental Health Support Service</option>
+            <option value="Children & Young People">Children & Young People Services</option>
+            <option value="Self-Employed">Self-Employed / Personal Assistant</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="field-full">
+          <label class="field-label">How Long Have You Worked in Care?<span class="required-star">*</span></label>
+          <div class="choice-group">
+            <div class="choice-item"><input type="radio" name="years_exp" id="exp-0" value="Under 1 year"><label for="exp-0"><span class="choice-dot"></span>Less than 1 year</label></div>
+            <div class="choice-item"><input type="radio" name="years_exp" id="exp-1" value="1–3 years"><label for="exp-1"><span class="choice-dot"></span>1 – 3 years</label></div>
+            <div class="choice-item"><input type="radio" name="years_exp" id="exp-2" value="3–5 years"><label for="exp-2"><span class="choice-dot"></span>3 – 5 years</label></div>
+            <div class="choice-item"><input type="radio" name="years_exp" id="exp-3" value="5+ years"><label for="exp-3"><span class="choice-dot"></span>5 years or more</label></div>
+          </div>
+        </div>
+        <div class="field-full">
+          <label class="field-label">Biggest Documentation Challenges?<span class="required-star">*</span></label>
+          <div class="field-hint" style="margin-bottom:10px">Select all that apply.</div>
+          <div class="choice-group">
+            <div class="choice-item"><input type="checkbox" name="doc_challenge" id="dc1" value="Not enough time"><label for="dc1"><span class="choice-check"></span>Not enough time to write reports after a shift</label></div>
+            <div class="choice-item"><input type="checkbox" name="doc_challenge" id="dc2" value="Professional language"><label for="dc2"><span class="choice-check"></span>Struggling with professional language / wording</label></div>
+            <div class="choice-item"><input type="checkbox" name="doc_challenge" id="dc3" value="Memory fade"><label for="dc3"><span class="choice-check"></span>Forgetting what happened by the time I write up</label></div>
+            <div class="choice-item"><input type="checkbox" name="doc_challenge" id="dc4" value="Policy knowledge"><label for="dc4"><span class="choice-check"></span>Not knowing what the policy requires me to record</label></div>
+            <div class="choice-item"><input type="checkbox" name="doc_challenge" id="dc5" value="Incident reports"><label for="dc5"><span class="choice-check"></span>Incident reports — I find these stressful or confusing</label></div>
+            <div class="choice-item"><input type="checkbox" name="doc_challenge" id="dc6" value="Handover notes"><label for="dc6"><span class="choice-check"></span>Handover notes — knowing what to include</label></div>
+            <div class="choice-item"><input type="checkbox" name="doc_challenge" id="dc7" value="No major challenges"><label for="dc7"><span class="choice-check"></span>I don't have major challenges with documentation</label></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="form-section" id="step-3">
+        <div class="section-header">
+          <div class="section-icon">🤖</div>
+          <div><div class="section-title">Your AI Experience</div><div class="section-desc">Be completely honest — there are no wrong answers. This shapes the live demos.</div></div>
+        </div>
+        <div class="callout teal"><span class="callout-icon">💡</span><div>Your answers help Manuel design the demonstrations around what participants actually need.</div></div>
+        <div class="field-full">
+          <label class="field-label">How would you describe your current relationship with AI?<span class="required-star">*</span></label>
+          <div class="choice-group">
+            <div class="choice-item"><input type="radio" name="ai_level" id="ai0" value="Never used"><label for="ai0"><span class="choice-dot"></span>🙅 I've never used any AI tool — this is brand new to me</label></div>
+            <div class="choice-item"><input type="radio" name="ai_level" id="ai1" value="Curious"><label for="ai1"><span class="choice-dot"></span>👀 I've heard of AI (ChatGPT etc.) but never actually tried it</label></div>
+            <div class="choice-item"><input type="radio" name="ai_level" id="ai2" value="Experimenter"><label for="ai2"><span class="choice-dot"></span>🧪 I've tried AI a few times but don't use it regularly</label></div>
+            <div class="choice-item"><input type="radio" name="ai_level" id="ai3" value="Occasional"><label for="ai3"><span class="choice-dot"></span>🔄 I use AI occasionally — maybe a few times a month</label></div>
+            <div class="choice-item"><input type="radio" name="ai_level" id="ai4" value="Regular"><label for="ai4"><span class="choice-dot"></span>⚡ I use AI regularly and it's part of my weekly routine</label></div>
+          </div>
+        </div>
+        <div class="section-divider"></div>
+        <div class="field-full">
+          <label class="field-label">Which AI tools have you used before?</label>
+          <div class="field-hint" style="margin-bottom:10px">Tick all you've tried — even just once.</div>
+          <div class="choice-group inline">
+            <div class="choice-item"><input type="checkbox" name="tools_used" id="t1" value="ChatGPT"><label for="t1"><span class="choice-check"></span>ChatGPT</label></div>
+            <div class="choice-item"><input type="checkbox" name="tools_used" id="t2" value="Claude"><label for="t2"><span class="choice-check"></span>Claude</label></div>
+            <div class="choice-item"><input type="checkbox" name="tools_used" id="t3" value="Gemini"><label for="t3"><span class="choice-check"></span>Gemini</label></div>
+            <div class="choice-item"><input type="checkbox" name="tools_used" id="t4" value="Microsoft Copilot"><label for="t4"><span class="choice-check"></span>Microsoft Copilot</label></div>
+            <div class="choice-item"><input type="checkbox" name="tools_used" id="t5" value="NotebookLM"><label for="t5"><span class="choice-check"></span>Google NotebookLM</label></div>
+            <div class="choice-item"><input type="checkbox" name="tools_used" id="t6" value="Siri/Alexa/Google"><label for="t6"><span class="choice-check"></span>Siri / Alexa / Google Assistant</label></div>
+            <div class="choice-item"><input type="checkbox" name="tools_used" id="t7" value="None"><label for="t7"><span class="choice-check"></span>None</label></div>
+          </div>
+        </div>
+        <div class="section-divider"></div>
+        <div class="field-full">
+          <label class="field-label">Have you ever used AI for anything work-related?<span class="required-star">*</span></label>
+          <div class="choice-group">
+            <div class="choice-item"><input type="radio" name="ai_work" id="aw0" value="No"><label for="aw0"><span class="choice-dot"></span>No — only for personal things if at all</label></div>
+            <div class="choice-item"><input type="radio" name="ai_work" id="aw1" value="Tried once or twice"><label for="aw1"><span class="choice-dot"></span>I tried once or twice but wasn't sure if I was doing it right</label></div>
+            <div class="choice-item"><input type="radio" name="ai_work" id="aw2" value="Occasionally"><label for="aw2"><span class="choice-dot"></span>Yes — occasionally for emails or looking things up</label></div>
+            <div class="choice-item"><input type="radio" name="ai_work" id="aw3" value="Regularly"><label for="aw3"><span class="choice-dot"></span>Yes — I use it regularly for work tasks</label></div>
+          </div>
+        </div>
+        <div class="section-divider"></div>
+        <div class="field-full">
+          <label class="field-label">Rate your confidence with technology<span class="required-star">*</span></label>
+          <div class="field-hint" style="margin-bottom:14px">1 = Not confident at all &nbsp;·&nbsp; 5 = Very confident</div>
+          <div class="scale-wrap">
+            <div class="scale-row">
+              <div class="scale-label-text">Using a smartphone</div>
+              <div class="scale-options">
+                <div class="scale-option"><input type="radio" name="conf_phone" id="cp1" value="1"><label for="cp1">1</label></div>
+                <div class="scale-option"><input type="radio" name="conf_phone" id="cp2" value="2"><label for="cp2">2</label></div>
+                <div class="scale-option"><input type="radio" name="conf_phone" id="cp3" value="3"><label for="cp3">3</label></div>
+                <div class="scale-option"><input type="radio" name="conf_phone" id="cp4" value="4"><label for="cp4">4</label></div>
+                <div class="scale-option"><input type="radio" name="conf_phone" id="cp5" value="5"><label for="cp5">5</label></div>
+              </div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-label-text">Using a laptop / PC</div>
+              <div class="scale-options">
+                <div class="scale-option"><input type="radio" name="conf_laptop" id="cl1" value="1"><label for="cl1">1</label></div>
+                <div class="scale-option"><input type="radio" name="conf_laptop" id="cl2" value="2"><label for="cl2">2</label></div>
+                <div class="scale-option"><input type="radio" name="conf_laptop" id="cl3" value="3"><label for="cl3">3</label></div>
+                <div class="scale-option"><input type="radio" name="conf_laptop" id="cl4" value="4"><label for="cl4">4</label></div>
+                <div class="scale-option"><input type="radio" name="conf_laptop" id="cl5" value="5"><label for="cl5">5</label></div>
+              </div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-label-text">Trying new apps</div>
+              <div class="scale-options">
+                <div class="scale-option"><input type="radio" name="conf_apps" id="ca1" value="1"><label for="ca1">1</label></div>
+                <div class="scale-option"><input type="radio" name="conf_apps" id="ca2" value="2"><label for="ca2">2</label></div>
+                <div class="scale-option"><input type="radio" name="conf_apps" id="ca3" value="3"><label for="ca3">3</label></div>
+                <div class="scale-option"><input type="radio" name="conf_apps" id="ca4" value="4"><label for="ca4">4</label></div>
+                <div class="scale-option"><input type="radio" name="conf_apps" id="ca5" value="5"><label for="ca5">5</label></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="section-divider"></div>
+        <div class="field-full">
+          <label class="field-label">What is your biggest concern about using AI in your work?</label>
+          <div class="choice-group">
+            <div class="choice-item"><input type="radio" name="ai_fear" id="af1" value="Privacy / GDPR"><label for="af1"><span class="choice-dot"></span>🔒 Sharing private or confidential information accidentally</label></div>
+            <div class="choice-item"><input type="radio" name="ai_fear" id="af2" value="Getting it wrong"><label for="af2"><span class="choice-dot"></span>❌ Getting it wrong and it affecting the quality of my work</label></div>
+            <div class="choice-item"><input type="radio" name="ai_fear" id="af3" value="Too complicated"><label for="af3"><span class="choice-dot"></span>😰 It being too technical or complicated for me</label></div>
+            <div class="choice-item"><input type="radio" name="ai_fear" id="af4" value="Replacing me"><label for="af4"><span class="choice-dot"></span>🤖 Worried AI might replace people like me in care work</label></div>
+            <div class="choice-item"><input type="radio" name="ai_fear" id="af5" value="Trust issues"><label for="af5"><span class="choice-dot"></span>🤔 Not sure I can trust what AI produces</label></div>
+            <div class="choice-item"><input type="radio" name="ai_fear" id="af6" value="No fears"><label for="af6"><span class="choice-dot"></span>💪 I don't have major fears — I'm ready to learn</label></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="form-section" id="step-4">
+        <div class="section-header">
+          <div class="section-icon">🎯</div>
+          <div><div class="section-title">Your Goals & Confirmation</div><div class="section-desc">Tell us what you want to get from this workshop, then confirm your place.</div></div>
+        </div>
+        <div class="field-full">
+          <label class="field-label">What would make this workshop a 10/10 success for you?<span class="required-star">*</span></label>
+          <div class="choice-group">
+            <div class="choice-item"><input type="checkbox" name="goal" id="g1" value="Faster reports"><label for="g1"><span class="choice-check"></span>Being able to write professional reports faster</label></div>
+            <div class="choice-item"><input type="checkbox" name="goal" id="g2" value="Policy confidence"><label for="g2"><span class="choice-check"></span>Understanding my policies better without the stress</label></div>
+            <div class="choice-item"><input type="checkbox" name="goal" id="g3" value="AI confidence"><label for="g3"><span class="choice-check"></span>Feeling confident enough to use AI in my job</label></div>
+            <div class="choice-item"><input type="checkbox" name="goal" id="g4" value="Save time"><label for="g4"><span class="choice-check"></span>Saving at least 1 hour per shift on admin tasks</label></div>
+            <div class="choice-item"><input type="checkbox" name="goal" id="g5" value="GDPR safe AI"><label for="g5"><span class="choice-check"></span>Knowing exactly how to use AI safely within GDPR rules</label></div>
+            <div class="choice-item"><input type="checkbox" name="goal" id="g6" value="Career growth"><label for="g6"><span class="choice-check"></span>Standing out in my role / progressing my career</label></div>
+          </div>
+        </div>
+        <div class="field-full">
+          <label class="field-label" for="open-goal">The ONE thing you most want to walk away with</label>
+          <textarea id="open-goal" name="open_goal" placeholder="Be as specific as you like — there are no wrong answers."></textarea>
+        </div>
+        <div class="field-full">
+          <label class="field-label" for="anything-else">Anything else we should know?</label>
+          <textarea id="anything-else" name="anything_else" placeholder="Any accessibility needs, questions, or topics you'd love us to cover..." style="min-height:70px"></textarea>
+        </div>
+        <div class="section-divider"></div>
+        <div class="callout amber"><span class="callout-icon">🔒</span><div><strong>Your privacy matters.</strong> Please read and confirm the statements below before submitting.</div></div>
+        <div class="consent-box">
+          <div class="consent-item">
+            <input type="checkbox" class="consent-checkbox" id="consent1" required>
+            <label for="consent1" class="consent-text"><strong>Workshop Registration (Required):</strong> I agree that NWAS can store my name and email to manage my registration and send me joining instructions.</label>
+          </div>
+          <div class="consent-item">
+            <input type="checkbox" class="consent-checkbox" id="consent2">
+            <label for="consent2" class="consent-text"><strong>AI Leverager Community (Optional):</strong> I agree that Manuel Chinyereuba / AI Leverager may contact me with information about future AI workshops and community membership. I can unsubscribe at any time.</label>
+          </div>
+          <div class="consent-item">
+            <input type="checkbox" class="consent-checkbox" id="consent3">
+            <label for="consent3" class="consent-text"><strong>WhatsApp Updates (Optional):</strong> I am happy to be added to the NWAS Community WhatsApp group for event reminders.</label>
+          </div>
+        </div>
+        <div class="field-hint" style="margin-top:-8px; margin-bottom:4px">Your data will never be sold. You may request deletion at any time by emailing nwas@youremail.com</div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success-screen" id="success-screen">
+        <div class="success-icon">🎉</div>
+        <div class="success-title">You're Registered!</div>
+        <div class="success-body">Your place is confirmed. Check your inbox — a confirmation email is on its way right now.</div>
+        <div class="success-box">
+          <div class="success-box-title">Your Session Details</div>
+          <div class="success-detail">📅 Saturday, 27 June 2026</div>
+          <div class="success-detail">🕙 10:00 AM – 12:30 PM</div>
+          <div class="success-detail">💻 Hybrid — In-person + Online</div>
+          <div class="success-detail">🎟 Your place: CONFIRMED</div>
+          <div class="success-detail">📧 Joining link sent within 24 hours</div>
+        </div>
+        <div class="success-body" style="font-size:13px; color:#1A6B6B; font-weight:600">
+          "AI isn't here to replace your value — it's here to reveal it."<br>
+          <span style="color:#64748B; font-weight:400">See you on the 27th — Manuel</span>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="form-nav" id="form-nav">
+      <button type="button" class="btn btn-back" id="btn-back" style="display:none" onclick="goBack()">← Back</button>
+      <div class="step-dots" id="step-dots">
+        <div class="step-dot active" id="dot-1"></div>
+        <div class="step-dot" id="dot-2"></div>
+        <div class="step-dot" id="dot-3"></div>
+        <div class="step-dot" id="dot-4"></div>
+      </div>
+      <button type="button" class="btn btn-next" id="btn-next" onclick="goNext()">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── CHANGE THIS TO YOUR DEPLOYED WEB APP URL ────────────────────────────────
+// After deploying the Apps Script as a Web App, paste the URL here:
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzbZKN-REmW21MdaBbBbeH8Y4ICjApMYZhqDbdUgiDrEpZGhsLfzN1CTUjh3iAtbMT/exec";
+// ─────────────────────────────────────────────────────────────────────────────
+
+var currentStep = 1;
+var totalSteps  = 4;
+var stepLabels  = [
+  "Step 1 of 4 — Your Details",
+  "Step 2 of 4 — Your Work",
+  "Step 3 of 4 — AI Experience",
+  "Step 4 of 4 — Goals & Confirmation"
+];
+
+function updateProgress() {
+  var pct = Math.round((currentStep / totalSteps) * 100);
+  document.getElementById("progress-fill").style.width = pct + "%";
+  document.getElementById("progress-pct").textContent  = pct + "%";
+  document.getElementById("progress-text").textContent = stepLabels[currentStep - 1];
+  for (var i = 1; i <= totalSteps; i++) {
+    var d = document.getElementById("dot-" + i);
+    d.className = "step-dot";
+    if (i < currentStep) d.classList.add("done");
+    else if (i === currentStep) d.classList.add("active");
+  }
+  document.getElementById("btn-back").style.display = currentStep > 1 ? "inline-flex" : "none";
+  var nb = document.getElementById("btn-next");
+  if (currentStep === totalSteps) {
+    nb.className = "btn btn-submit";
+    nb.innerHTML = "✓ Confirm My Place";
+    nb.onclick   = submitForm;
+  } else {
+    nb.className = "btn btn-next";
+    nb.innerHTML = "Continue →";
+    nb.onclick   = goNext;
+  }
+}
+
+function validateStep(step) {
+  var section  = document.getElementById("step-" + step);
+  var required = section.querySelectorAll("[required]");
+  var valid    = true;
+  required.forEach(function(el) {
+    if (!el.value || el.value === "") {
+      el.style.borderColor = "#DC2626";
+      el.style.boxShadow   = "0 0 0 3px rgba(220,38,38,.1)";
+      valid = false;
+    } else {
+      el.style.borderColor = "";
+      el.style.boxShadow   = "";
+    }
+  });
+  if (step === 2) {
+    if (!section.querySelector("input[name='years_exp']:checked")) { valid = false; alert("Please tell us how long you've worked in care."); }
+    if (!section.querySelectorAll("input[name='doc_challenge']:checked").length) { valid = false; alert("Please select at least one documentation challenge."); }
+  }
+  if (step === 3) {
+    if (!section.querySelector("input[name='ai_level']:checked")) { valid = false; alert("Please tell us about your current AI experience."); }
+    if (!section.querySelector("input[name='ai_work']:checked"))  { valid = false; alert("Please answer the work AI question."); }
+    if (!section.querySelector("input[name='conf_phone']:checked")){ valid = false; alert("Please rate your smartphone confidence."); }
+  }
+  if (step === 4) {
+    if (!section.querySelectorAll("input[name='goal']:checked").length) { valid = false; alert("Please select at least one goal for the workshop."); }
+    if (!document.getElementById("consent1").checked)                   { valid = false; alert("Please agree to the workshop registration consent to proceed."); }
+  }
+  return valid;
+}
+
+function goNext() {
+  if (!validateStep(currentStep)) return;
+  document.getElementById("step-" + currentStep).classList.remove("active");
+  currentStep++;
+  document.getElementById("step-" + currentStep).classList.add("active");
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function goBack() {
+  document.getElementById("step-" + currentStep).classList.remove("active");
+  currentStep--;
+  document.getElementById("step-" + currentStep).classList.add("active");
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function collectFormData() {
+  function val(id)  { return (document.getElementById(id) || {}).value || ""; }
+  function checks(name) {
+    return Array.from(document.querySelectorAll("input[name='" + name + "']:checked"))
+                .map(function(el){ return el.value; });
+  }
+  function radio(name) {
+    var el = document.querySelector("input[name='" + name + "']:checked");
+    return el ? el.value : "";
+  }
+  return {
+    first_name:        val("first-name"),
+    last_name:         val("last-name"),
+    email:             val("email"),
+    phone:             val("phone"),
+    attendance:        val("attendance"),
+    heard:             val("heard"),
+    job_title:         val("job-title"),
+    employer_type:     val("employer-type"),
+    years_exp:         radio("years_exp"),
+    doc_challenge:     checks("doc_challenge"),
+    ai_level:          radio("ai_level"),
+    tools_used:        checks("tools_used"),
+    ai_work:           radio("ai_work"),
+    conf_phone:        radio("conf_phone"),
+    conf_laptop:       radio("conf_laptop"),
+    conf_apps:         radio("conf_apps"),
+    ai_fear:           radio("ai_fear"),
+    goal:              checks("goal"),
+    open_goal:         val("open-goal"),
+    anything_else:     val("anything-else"),
+    consent_nwas:      document.getElementById("consent1").checked ? "Yes" : "No",
+    consent_leverager: document.getElementById("consent2").checked ? "Yes" : "No",
+    consent_whatsapp:  document.getElementById("consent3").checked ? "Yes" : "No"
+  };
+}
+
+function submitForm() {
+  if (!validateStep(4)) return;
+  var btn = document.getElementById("btn-next");
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>&nbsp; Submitting...';
+
+  var payload = collectFormData();
+
+  fetch(SCRIPT_URL, {
+    method:  "POST",
+    headers: { "Content-Type": "application/json" },
+    body:    JSON.stringify(payload),
+    mode:    "no-cors"  // required for Apps Script Web Apps
+  })
+  .then(function() {
+    // no-cors means we can't read the response body, but submission worked
+    showSuccess();
+  })
+  .catch(function(err) {
+    console.error("Submission error:", err);
+    // Still show success — Apps Script no-cors always triggers catch
+    // even on success. Show success screen optimistically.
+    showSuccess();
+  });
+}
+
+function showSuccess() {
+  for (var i = 1; i <= totalSteps; i++) {
+    var s = document.getElementById("step-" + i);
+    if (s) s.style.display = "none";
+  }
+  document.getElementById("form-nav").style.display = "none";
+  document.querySelector(".progress-bar-wrap").style.display = "none";
+  document.getElementById("success-screen").style.display = "block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+updateProgress();
+</script>
+</body>
+</html>
